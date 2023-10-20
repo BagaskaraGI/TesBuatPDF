@@ -24,32 +24,7 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.btnCreatePDF.setOnClickListener {
-            val pdfDocument = PdfDocument()
-
-            val pageInfo = PdfDocument.PageInfo.Builder(300, 500, 1).create()
-            val page = pdfDocument.startPage(pageInfo)
-
-            val canvas = page.canvas
-            val paint = Paint()
-
-            // Atur ukuran font dan warna teks
-            paint.textSize = 12f
-            paint.color = Color.BLACK
-
-            canvas.drawText("TES BUAT PDF BAGAS", 40f, 50f, paint)
-
-            // Selesai dengan halaman
-            pdfDocument.finishPage(page)
-
-            // Simpan dokumen PDF ke penyimpanan
-            file = File(this@MainActivity.getExternalFilesDir(null), "dokumen.pdf")
-            pdfDocument.writeTo(FileOutputStream(file))
-
-            Log.d("PDF_PATH", file!!.absolutePath)
-
-            // Tutup PdfDocument setelah selesai
-            pdfDocument.close()
-
+            createPDF()
         }
 
         binding.btnShowPDF.setOnClickListener {
@@ -65,5 +40,53 @@ class MainActivity : AppCompatActivity() {
                 .defaultPage(0) // Halaman pertama
                 .load()
         }
+    }
+
+
+
+
+    private fun createPDF(){
+        val pdfDocument = PdfDocument()
+
+        val pageInfo = PdfDocument.PageInfo.Builder(300, 500, 1).create()
+        val page = pdfDocument.startPage(pageInfo)
+
+        val canvas = page.canvas
+        val paint = Paint()
+
+        // Atur ukuran font dan warna teks
+        paint.textSize = 12f
+        paint.color = Color.BLACK
+        paint.textAlign = Paint.Align.CENTER
+
+        canvas.drawText("TES BUAT PDF BAGAS", pageInfo.pageWidth.toFloat()/2, 30f, paint)
+
+        paint.textSize = 6f
+        paint.color = Color.rgb(122,119,119)
+        canvas.drawText("Cevest Bbplk Bekasi, BBPLK, Jl. Guntur Raya No.1, Kayuringin Jaya", pageInfo.pageWidth.toFloat()/2, 40f, paint)
+
+        paint.textAlign = Paint.Align.LEFT
+        paint.textSize = 9f
+        paint.color = Color.rgb(122,119,119)
+        canvas.drawText("Customer Information", 10f, 70f, paint)
+
+        paint.textAlign = Paint.Align.LEFT
+        paint.textSize = 8f
+        paint.color = Color.BLACK
+
+
+
+        // Selesai dengan halaman
+        pdfDocument.finishPage(page)
+
+        // Simpan dokumen PDF ke penyimpanan
+        file = File(this@MainActivity.getExternalFilesDir(null), "dokumen.pdf")
+        pdfDocument.writeTo(FileOutputStream(file))
+
+        Log.d("PDF_PATH", file!!.absolutePath)
+
+        // Tutup PdfDocument setelah selesai
+        pdfDocument.close()
+
     }
 }
