@@ -1,5 +1,8 @@
 package com.example.tesbuatpdf
 
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
@@ -14,9 +17,17 @@ import java.io.FileOutputStream
 class MainActivity : AppCompatActivity() {
     private var file : File? = null
     private lateinit var binding : ActivityMainBinding
+    
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+//        val drawableId = R.drawable.disdik_bekasi
+//        val bitmap = BitmapFactory.decodeResource(resources, drawableId)
+//        val scaledBitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, false)
+
+
 
         binding = ActivityMainBinding.inflate(layoutInflater)
 
@@ -48,36 +59,10 @@ class MainActivity : AppCompatActivity() {
     private fun createPDF(){
         val pdfDocument = PdfDocument()
 
-        val pageInfo = PdfDocument.PageInfo.Builder(300, 500, 1).create()
-        val page = pdfDocument.startPage(pageInfo)
 
-        val canvas = page.canvas
-        val paint = Paint()
+//        buatPDF1(pdfDocument)
 
-        // Atur ukuran font dan warna teks
-        paint.textSize = 12f
-        paint.color = Color.BLACK
-        paint.textAlign = Paint.Align.CENTER
-
-        canvas.drawText("TES BUAT PDF BAGAS", pageInfo.pageWidth.toFloat()/2, 30f, paint)
-
-        paint.textSize = 6f
-        paint.color = Color.rgb(122,119,119)
-        canvas.drawText("Cevest Bbplk Bekasi, BBPLK, Jl. Guntur Raya No.1, Kayuringin Jaya", pageInfo.pageWidth.toFloat()/2, 40f, paint)
-
-        paint.textAlign = Paint.Align.LEFT
-        paint.textSize = 9f
-        paint.color = Color.rgb(122,119,119)
-        canvas.drawText("Customer Information", 10f, 70f, paint)
-
-        paint.textAlign = Paint.Align.LEFT
-        paint.textSize = 8f
-        paint.color = Color.BLACK
-
-
-
-        // Selesai dengan halaman
-        pdfDocument.finishPage(page)
+        buatPDF2(pdfDocument, this)
 
         // Simpan dokumen PDF ke penyimpanan
         file = File(this@MainActivity.getExternalFilesDir(null), "dokumen.pdf")
