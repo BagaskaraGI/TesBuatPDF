@@ -8,6 +8,14 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.media.Image
+import com.itextpdf.barcodes.BarcodeQRCode
+import com.itextpdf.io.image.ImageDataFactory
+import com.itextpdf.kernel.colors.ColorConstants
+import com.itextpdf.layout.Document
+import com.itextpdf.layout.element.Paragraph
+import com.itextpdf.layout.element.Table
+import com.itextpdf.layout.element.Text
+import java.io.ByteArrayOutputStream
 
 fun buatPDF1(pdfDocument: PdfDocument){
     var informationArray = listOf<String>("Name", "Company Name", "Address", "Phone", "Email")
@@ -93,4 +101,69 @@ fun buatPDF2(pdfDocument: PdfDocument, context: Context){
     pdfDocument.finishPage(page)
 
 
+}
+
+
+fun buatPDF3(pdfDocument: com.itextpdf.kernel.pdf.PdfDocument, document : Document, context: Context){
+    val text1 = Text("Bold").setBold()
+    val text2 = Text("Italic").setItalic()
+    val text3 = Text("Underline").setUnderline()
+
+    val paragraph = Paragraph("Hello World, Ini Bagas")
+
+    val paragraph1 = Paragraph()
+        .add(text1)
+        .add(text2)
+        .add(text3)
+
+    val list = com.itextpdf.layout.element.List()
+        .add("Android")
+        .add("Java")
+        .add("C++")
+        .add("Kotlin")
+
+
+    val drawableId = R.drawable.disdik_bekasi
+    val bitmap = BitmapFactory.decodeResource(context.resources, drawableId)
+
+    val stream = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+
+    val bitmapData = stream.toByteArray()
+
+    val imageData = ImageDataFactory.create(bitmapData)
+    val image = com.itextpdf.layout.element.Image(imageData)
+        .setHeight(100f)
+        .setWidth(150f)
+
+    val columnWidth : Array<Float> = arrayOf(200f, 200f)
+    val columnWidthFloatArray = columnWidth.toFloatArray()
+    val table = Table(columnWidthFloatArray)
+
+
+    table
+        .addCell("Name")
+        .addCell("Age")
+        .addCell("Raja Ram")
+        .addCell("32")
+        .addCell("Sumit")
+        .addCell("21")
+
+    val qrCode = BarcodeQRCode("Hello World, This is Bagas")
+    val barcodeObj = qrCode.createFormXObject(ColorConstants.BLACK,pdfDocument)
+    val barcodeImage = com.itextpdf.layout.element.Image(barcodeObj).setWidth(100f).setHeight(100f)
+
+    val qrCode2 = BarcodeQRCode("https://www.youtube.com/")
+    val barcodeObj2 = qrCode2.createFormXObject(ColorConstants.BLACK,pdfDocument)
+    val barcodeImage2 = com.itextpdf.layout.element.Image(barcodeObj2).setWidth(100f).setHeight(100f)
+
+    document.add(paragraph)
+    document.add(paragraph1)
+    document.add(list)
+    document.add(image)
+        .add(Paragraph(""))
+        .add(table)
+        .add(barcodeImage)
+        .add(barcodeImage2)
+    document.close()
 }
