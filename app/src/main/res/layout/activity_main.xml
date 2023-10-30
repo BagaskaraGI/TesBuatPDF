@@ -26,12 +26,21 @@
     <com.github.barteksc.pdfviewer.PDFView
         android:id="@+id/pdfView"
         android:layout_width="0dp"
-        android:layout_height="658dp"
+        android:layout_height="668dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
     </com.github.barteksc.pdfviewer.PDFView>
+
+    <Button
+        android:id="@+id/btnSignPDF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TTD PDF"
+        app:layout_constraintEnd_toStartOf="@+id/btnShowPDF"
+        app:layout_constraintStart_toEndOf="@+id/btnCreatePDF"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

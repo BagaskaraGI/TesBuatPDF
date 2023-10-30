@@ -52,6 +52,10 @@ class MainActivity : AppCompatActivity() {
             createPDF()
         }
 
+        binding.btnSignPDF.setOnClickListener {
+            signPDF()
+        }
+
         binding.btnShowPDF.setOnClickListener {
             file = File(this@MainActivity.getExternalFilesDir(null), "dokumen.pdf")
             val pdfFileName =
@@ -73,6 +77,8 @@ class MainActivity : AppCompatActivity() {
                 .load()
         }
     }
+
+
 
     private fun createPDF() {
 //        val pdfDocument = PdfDocument()
@@ -122,7 +128,6 @@ class MainActivity : AppCompatActivity() {
         val y = 500.0
         val fontSize = 11f
 
-
         addTextToCanvas(canvas, x = 250.0, y = 682.0, fontSize = 11f, "Nomor SKPI")
         addTextToCanvas(canvas, x = 150.0, y = 597.0, fontSize = 11f, "Nomor Surat Keterangan Laporan Kepolisian")
         addTextToCanvas(canvas, x = x, y = 535.0, fontSize = 11f, "Nomor Ijazah/STTB")
@@ -132,7 +137,35 @@ class MainActivity : AppCompatActivity() {
         addTextToCanvas(canvas, x = x, y = 425.0, fontSize = 11f, "NIS/NISN")
         addTextToCanvas(canvas, x = x, y = 397.0, fontSize = 11f, "Tahun Pelajaran")
         addTextToCanvas(canvas, x = 350.0, y = 350.0, fontSize = 11f, "Tahun Pelajaran2")
+        addTextToCanvas(canvas, x = 350.0, y = 265.0, fontSize = 11f, "Tanggal Surat")
+        addTextToCanvas(canvas, x = 310.0, y = 100.0, fontSize = 11f, "Nama Kadis")
+        addTextToCanvas(canvas, x = 345.0, y = 80.0, fontSize = 11f, "NIP Kadis")
 
+//        //Mau Bikin qr code
+//        val qrCode = BarcodeQRCode("Hello World, This is Bagas")
+//        val barcodeObj = qrCode.createFormXObject(ColorConstants.BLACK,pdfDocument3)
+//        val barcodeImage = com.itextpdf.layout.element.Image(barcodeObj).setWidth(100f).setHeight(100f)
+//
+//        barcodeImage.setFixedPosition(350f,115f)
+//
+//        document2.add(barcodeImage)
+
+
+        val drawableId = R.drawable.muhammad_aji_saputra
+        val bitmap = BitmapFactory.decodeResource(resources, drawableId)
+
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+
+        val bitmapData = stream.toByteArray()
+        val imageData = ImageDataFactory.create(bitmapData)
+        val image = com.itextpdf.layout.element.Image(imageData)
+            .setHeight(150f)
+            .setWidth(112.5f)
+
+        image.setFixedPosition(90f, 125f)
+
+        document2.add(image)
 
         // Tutup dokumen PDF
         document2.close()
@@ -145,6 +178,60 @@ class MainActivity : AppCompatActivity() {
 
         // Tutup PdfDocument setelah selesai
 //        pdfDocument.close()
+    }
+
+
+
+    private fun signPDF() {
+
+
+        try {
+            val file = File(this@MainActivity.getExternalFilesDir(null), "dokumen.pdf")
+            val output = File(this@MainActivity.getExternalFilesDir(null), "hasilEdit.pdf")
+            val reader = PdfReader(file)
+            val writer = PdfWriter(output)
+            // Lanjutkan dengan pengolahan PDF
+
+            val pdfDocument = com.itextpdf.kernel.pdf.PdfDocument(reader, writer)
+            val document = Document(pdfDocument)
+
+            FileOutputStream(output)
+
+            //Mau Bikin qr code
+            val qrCode = BarcodeQRCode("Hello World, This is Bagas")
+            val barcodeObj = qrCode.createFormXObject(ColorConstants.BLACK,pdfDocument)
+            val barcodeImage = com.itextpdf.layout.element.Image(barcodeObj).setWidth(100f).setHeight(100f)
+
+            barcodeImage.setFixedPosition(350f,115f)
+
+            document.add(barcodeImage)
+
+            document.close() // Simpan hasil perubahan ke file yang sama
+
+            // Contoh jika Anda ingin menyalin file writer ke file reader:
+            output.copyTo(file,true)
+
+            // Hapus file sementara jika diperlukan
+            output.delete()
+
+
+
+            Toast.makeText(this, "Pdf Signed", Toast.LENGTH_LONG).show()
+        } catch (e: com.itextpdf.io.IOException) {
+            e.printStackTrace()
+            // Tangani kesalahan, seperti memberikan pesan kesalahan kepada pengguna
+        }catch (e: Exception) {
+            // Tangani pengecualian di sini
+            e.printStackTrace()
+            Log.e("Exception", "Terjadi pengecualian: ${e.message}")
+        } catch (e: Throwable) {
+            // Tangani pengecualian di sini
+            e.printStackTrace()
+            Log.e("Throwable", "Terjadi pengecualian: ${e.message}")
+        }
+//        val reader = PdfReader(file)
+//        val writer = PdfWriter(file)
+
     }
 
     fun addTextToCanvas(

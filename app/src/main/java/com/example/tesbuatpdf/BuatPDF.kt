@@ -130,7 +130,6 @@ fun buatPDF3(pdfDocument: com.itextpdf.kernel.pdf.PdfDocument, document : Docume
     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
 
     val bitmapData = stream.toByteArray()
-
     val imageData = ImageDataFactory.create(bitmapData)
     val image = com.itextpdf.layout.element.Image(imageData)
         .setHeight(100f)
